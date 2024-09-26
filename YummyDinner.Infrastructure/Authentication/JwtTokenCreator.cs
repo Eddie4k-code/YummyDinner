@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using YummyDinner.Application.Common.Contracts;
 
@@ -17,17 +18,22 @@ namespace YummyDinner.Infrastructure.Authentication
     /* A concrete implementation for creating a Json Web Token */
     public class JwtTokenCreator : IJwtTokenCreator
     {
-        private  IConfiguration _config;
-        public JwtTokenCreator(IConfiguration config) {
+        //private  IConfiguration _config;
 
-            this._config = config;
+        private readonly JwtSettings _jwtSettings;
+        private IDateTimeProvider _dateTimeProvider;
+        public JwtTokenCreator(/*IConfiguration config*/ IOptions<JwtSettings> jwtSettings, IDateTimeProvider dateTimeProvider) {
+
+            //this._config = config;
+            this._jwtSettings = jwtSettings.Value;
+            this._dateTimeProvider = dateTimeProvider;
 
         }
 
         public string GenerateToken(Guid Id, string firstName, string lastName)
         {
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this._jwtSettings.Key));
 
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
@@ -39,8 +45,8 @@ namespace YummyDinner.Infrastructure.Authentication
             };
 
             var token = new JwtSecurityToken(
-                issuer: "YummyDinner",
-                expires: DateTime.Now.AddDays(1),
+                issuer: this._jwtSettings.Issuer,
+                expires: this._dateTimeProvider.UtcNow.AddDays(1),
                 claims: claims,
                 signingCredentials: creds
             );

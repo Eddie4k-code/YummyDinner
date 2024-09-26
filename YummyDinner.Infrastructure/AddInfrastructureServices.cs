@@ -21,6 +21,7 @@ namespace YummyDinner.Infrastructure
             public static IServiceCollection RegisterInfrastructureServices(this IServiceCollection services, IConfiguration config) {
                 services.AddSingleton<IJwtTokenCreator, JwtTokenCreator>();
                 services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
+                services.Configure<JwtSettings>(config.GetSection("Jwt"));
                 return services;
             }
 
