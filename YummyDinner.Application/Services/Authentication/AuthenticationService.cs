@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using YummyDinner.Application.Common.Contracts;
+using YummyDinner.Application.Common.Contracts.Persistence;
 
 
 namespace YummyDinner.Application.Services.Authentication
@@ -11,11 +12,13 @@ namespace YummyDinner.Application.Services.Authentication
     {
 
         private readonly IJwtTokenCreator _jwtTokenCreator;
+        private readonly IUserRepository _userRepository;
 
 
-        public AuthenticationService(IJwtTokenCreator jwtTokenCreator) {
+        public AuthenticationService(IJwtTokenCreator jwtTokenCreator, IUserRepository _userRepository) {
 
             this._jwtTokenCreator = jwtTokenCreator;
+            this._userRepository = _userRepository;
         }
 
         public AuthenticationResult Login(string email, string password)
