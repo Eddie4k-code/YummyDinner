@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using YummyDinner.Application.Common.Contracts;
+using YummyDinner.Domain.Entities;
 
 
 namespace YummyDinner.Infrastructure.Authentication
@@ -30,7 +31,7 @@ namespace YummyDinner.Infrastructure.Authentication
 
         }
 
-        public string GenerateToken(Guid Id, string firstName, string lastName)
+        public string GenerateToken(User user)
         {
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this._jwtSettings.Key));
@@ -39,9 +40,9 @@ namespace YummyDinner.Infrastructure.Authentication
 
 
             var claims = new[]{
-                new Claim(JwtRegisteredClaimNames.Sub, Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.GivenName, firstName),
-                new Claim(JwtRegisteredClaimNames.FamilyName, lastName)                       
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.GivenName, user.FirstName),
+                new Claim(JwtRegisteredClaimNames.FamilyName, user.LastName)                       
             };
 
             var token = new JwtSecurityToken(
@@ -53,5 +54,6 @@ namespace YummyDinner.Infrastructure.Authentication
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
     }
 }

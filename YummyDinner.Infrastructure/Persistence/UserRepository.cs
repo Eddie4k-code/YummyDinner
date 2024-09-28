@@ -11,14 +11,17 @@ namespace YummyDinner.Infrastructure.Persistence
     /* Concrete implementation of a user repository that will interact with database */
     public class UserRepository : IUserRepository
     {
+
+        private readonly List<User> _users = new List<User>();
+
         public void Add(User user)
         {
-            throw new NotImplementedException();
+            this._users.Add(user);
         }
 
         public User? GetUser(string email)
         {
-            throw new NotImplementedException();
+            return _users.FirstOrDefault(u => u.Email == email);
         }
     }
 }

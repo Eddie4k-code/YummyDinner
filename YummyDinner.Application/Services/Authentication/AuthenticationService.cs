@@ -38,6 +38,8 @@ namespace YummyDinner.Application.Services.Authentication
                 throw new Exception("Incorrect email or password");
             }
 
+             //Create JWT Token
+            var token = this._jwtTokenCreator.GenerateToken(user);
 
 
 
@@ -45,7 +47,8 @@ namespace YummyDinner.Application.Services.Authentication
 
 
 
-            return new AuthenticationResult(Guid.NewGuid(), "email", "password", "firstname", "lastname");
+
+            return new AuthenticationResult(user.Id, user.Email, user.FirstName, user.LastName, token);
         }
 
         public AuthenticationResult Register(string firstName, string lastName, string password, string email) {
@@ -66,7 +69,7 @@ namespace YummyDinner.Application.Services.Authentication
             this._userRepository.Add(user);
 
             //Create JWT Token
-            var token = this._jwtTokenCreator.GenerateToken(user.Id, user.FirstName, user.LastName);
+            var token = this._jwtTokenCreator.GenerateToken(user);
             
             return new AuthenticationResult(user.Id, user.FirstName, user.LastName, user.Email, token);
         }

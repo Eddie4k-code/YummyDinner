@@ -6,7 +6,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using YummyDinner.Application.Common.Contracts;
+using YummyDinner.Application.Common.Contracts.Persistence;
 using YummyDinner.Infrastructure.Authentication;
+using YummyDinner.Infrastructure.Persistence;
 using YummyDinner.Infrastructure.Services;
 
 namespace YummyDinner.Infrastructure
@@ -21,7 +23,10 @@ namespace YummyDinner.Infrastructure
             public static IServiceCollection RegisterInfrastructureServices(this IServiceCollection services, IConfiguration config) {
                 services.AddSingleton<IJwtTokenCreator, JwtTokenCreator>();
                 services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
+                services.AddScoped<IUserRepository, UserRepository>();
                 services.Configure<JwtSettings>(config.GetSection("Jwt"));
+
+                
                 return services;
             }
 
