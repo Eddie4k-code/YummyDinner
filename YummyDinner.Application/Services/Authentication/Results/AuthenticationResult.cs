@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace YummyDinner.Application.Services.Authentication
+namespace YummyDinner.Application.Services.Authentication.Results
 {
     public record AuthenticationResult
     {

@@ -1,3 +1,4 @@
+using YummyDinner.API.Middleware;
 using YummyDinner.Infrastructure;
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,7 +25,7 @@ if (app.Environment.IsDevelopment())
 
 
 
-
+app.UseMiddleware<HandleError>();
 app.UseHttpsRedirection();
 
 
