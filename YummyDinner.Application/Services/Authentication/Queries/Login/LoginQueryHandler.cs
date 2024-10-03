@@ -2,30 +2,32 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MediatR;
 using YummyDinner.Application.Common.Contracts;
 using YummyDinner.Application.Common.Contracts.Persistence;
-using YummyDinner.Domain.Entities;
+using YummyDinner.Application.Services.Authentication.Queries.Login;
 using YummyDinner.Application.Services.Authentication.Results;
+using YummyDinner.Domain.Entities;
 
-namespace YummyDinner.Application.Services.Authentication.Queries
+namespace YummyDinner.Application.Services.Authentication.Commands.Register
 {
-    public class AuthenticationQueryService : IAuthenticationQueryService
+    public class LoginQueryHandler : IRequestHandler<LoginQuery, AuthenticationResult>
     {
 
         private readonly IJwtTokenCreator _jwtTokenCreator;
         private readonly IUserRepository _userRepository;
 
 
-        public AuthenticationQueryService(IJwtTokenCreator jwtTokenCreator, IUserRepository _userRepository) {
-
+        public LoginQueryHandler(IJwtTokenCreator jwtTokenCreator, IUserRepository userRepository)
+        {
             this._jwtTokenCreator = jwtTokenCreator;
-            this._userRepository = _userRepository;
+            this._userRepository = userRepository;
         }
 
-        public AuthenticationResult Login(string email, string password)
+        
+        public async Task<AuthenticationResult> Handle(LoginQuery request, CancellationToken cancellationToken)
         {
-
-            var user = _userRepository.GetUser(email);
+             var user = _userRepository.GetUser(request.email);
 
             //validate user exists
             
@@ -34,7 +36,7 @@ namespace YummyDinner.Application.Services.Authentication.Queries
             }
 
             //validate password
-            if (user.Password != password) {
+            if (user.Password != request.password) {
                 throw new Exception("Incorrect email or password");
             }
 
@@ -50,8 +52,6 @@ namespace YummyDinner.Application.Services.Authentication.Queries
 
             return new AuthenticationResult(user.Id, user.Email, user.FirstName, user.LastName, token);
         }
-
-
-       
     }
+
 }

@@ -1,3 +1,4 @@
+using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using YummyDinner.Application.Services.Authentication;
 
@@ -9,7 +10,8 @@ using YummyDinner.Application.Services.Authentication;
 */
 public static class AddApplicationServices {
     public static IServiceCollection RegisterApplicationServices(this IServiceCollection services) {
-        services.AddScoped<IAuthService, AuthenticationService>();
+        
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
         return services;
     }
