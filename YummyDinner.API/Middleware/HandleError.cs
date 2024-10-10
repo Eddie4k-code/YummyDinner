@@ -16,7 +16,7 @@ namespace YummyDinner.API.Middleware
         }
 
 
-        public async Task Handle(HttpContext context)
+        public async Task Invoke(HttpContext context)
         {
 
             try {
